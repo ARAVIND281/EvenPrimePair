@@ -39,6 +39,7 @@ EvenPrimePair is a Python project designed to find two prime numbers that sum up
 
 4. File Description
 - EvenPrimePair.py: The main script that contains the logic for finding the prime pairs.
+- EvenPrimePair_pseudocode.txt: A text file containing the pseudocode for the project.
 
 ## Contributing
 
