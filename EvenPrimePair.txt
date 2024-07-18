@@ -1,0 +1,57 @@
+START
+
+FUNCTION miller_rabin_test(n, k=5)
+    IF n is 2 or 3 THEN RETURN True
+    IF n <= 1 OR n is even THEN RETURN False
+    SET r, d to 0, n - 1
+    WHILE d is even DO INCREMENT r, SET d to d / 2
+    FOR i FROM 0 to k DO
+        SET a to random integer between 2 and n - 2
+        SET x to (a^d) % n
+        IF x is 1 OR x is n - 1 THEN CONTINUE
+        FOR j FROM 0 to r - 1 DO
+            SET x to (x^2) % n
+            IF x is n - 1 THEN BREAK
+        IF x is not n - 1 THEN RETURN False
+    RETURN True
+
+FUNCTION is_prime(n)
+    IF n < 2 THEN RETURN False
+    IF n < 4 THEN RETURN True
+    IF n is even OR n % 3 is 0 THEN RETURN False
+    IF n < 9 THEN RETURN True
+    RETURN miller_rabin_test(n)
+
+FUNCTION find_prime_pair(even_number)
+    IF even_number <= 2 OR even_number is odd THEN RETURN None
+    SET limit to 10^6
+    CREATE sieve array, SET all to True, SET sieve[0] and sieve[1] to False
+    FOR i FROM 2 to sqrt(limit) DO
+        IF sieve[i] is True THEN
+            FOR j FROM i*i to limit, step i DO SET sieve[j] to False
+    SET small_primes to primes in sieve
+    FOR prime in small_primes DO
+        IF prime >= even_number THEN BREAK
+        IF is_prime(even_number - prime) THEN RETURN (prime, even_number - prime)
+    FOR i FROM small_primes[-1] to even_number // 2 + 1, step 2 DO
+        IF is_prime(i) AND is_prime(even_number - i) THEN RETURN (i, even_number - i)
+    RETURN None
+
+FUNCTION benchmark(even_number)
+    SET start_time to current time
+    SET prime_pair to find_prime_pair(even_number)
+    SET end_time to current time
+    RETURN (end_time - start_time, prime_pair)
+
+FUNCTION main()
+    PROMPT user for an even number greater than 2, READ even_number
+    IF even_number <= 2 OR even_number is odd THEN PRINT error message, RETURN
+    SET (elapsed_time, prime_pair) to benchmark(even_number)
+    PRINT "Time taken: ", elapsed_time, "seconds"
+    IF prime_pair is not None THEN
+        PRINT "The two prime numbers that sum up to ", even_number, " are: ", prime_pair[0], " and ", prime_pair[1]
+    ELSE PRINT "No prime pair found for the number ", even_number
+
+IF __name__ == "__main__" THEN CALL main()
+
+END
