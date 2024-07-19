@@ -1,7 +1,7 @@
 import time
 import random
 
-def miller_rabin_test(n, k=5):
+def miller_rabin_test(n, k=10):
     if n in (2, 3):
         return True
     if n <= 1 or n % 2 == 0:
